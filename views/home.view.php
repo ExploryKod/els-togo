@@ -3,15 +3,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && realpath(__FILE__) == realpath($_SERV
     header('HTTP/1.0 403 Forbidden', TRUE, 403);
     die();
 }
-use Els\Entity\Projects;
 
 $members = $data['members'] ?? "";
 $projects = $data['projects'] ?? "";
 $sections = $data['sections'] ?? "";
-$cards = $data['cardsContents'];
-echo "<pre>";
-var_dump($cards['mission']);
-echo "</pre>";
+$cards = $data['cardsContents'] ?? "";
+$contacts = $data['contacts'] ?? "";
+
 $jsonMembers = [
     [
         'nom' => 'Kpeglo Bessou',
@@ -181,11 +179,11 @@ $partners = [
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-image">
-                            <img src="/assets/img/icons/5236.jpg" alt="personnes tenant des feuilles" />
+                            <img src="<?= $card->getCardImg()['img_source'] ?? '/assets/img/icons/5236.jpg' ?>" alt="<?= $card->getCardImg()['img_alt_text'] ?? 'Personnes tenant des feuilles' ?>" />
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title"><?php $card->getCardTitle() ?></h5>
-                            <p class="card-text"><?php $card->getCardText() ?></p>
+                            <h5 class="card-title"><?= $card->getCardTitle() ?></h5>
+                            <p class="card-text"><?=$card->getCardText() ?></p>
                         </div>
                     </div>
                 </div>
@@ -378,10 +376,20 @@ $partners = [
                     <div class="contact-container row justify-content-center">
                         <div class="contact-container__email">
                             <div class="">
-                                <span class="pb-3 contact-address els-text els-text-lg">Basé à Tsévié, à 35km de Lomé.</span>
-                                <span class="pb-3 contact-schedules els-text els-text-lg">Horaires d’ouverture : <br /> Nous n'avons pas d'horaires fixes. N'hésitez pas à nous laisser un message, nous vous rappellerons.</span>
-                                <!--  need to be obfusctated -->
-                                <a href="tel:+00000000000" class="pb-3 contact-tel els-text els-text-lg">(+000) 00 00 00 00</a>
+                                <?php if(array_key_exists('home', $contacts)) {
+                                    foreach($contacts['home'] as $contact) { ?>
+                                        <span class="pb-3 contact-address els-text els-text-lg">
+                                            <?= $contact->getContactAddress() ? $contact->getContactAddress() : "" ?>
+                                        </span>
+                                        <span class="pb-3 contact-schedules els-text els-text-lg">
+                                            Horaires d’ouverture : <br /> <?= $contact->getContactSchedules() ? $contact->getContactSchedules() : "" ?>
+                                        </span>
+                                        <!--  need to be obfusctated -->
+                                        <a href="tel:+00000000000" class="pb-3 contact-tel els-text els-text-lg">
+                                            <?= $contact->getContactPhone()  ? $contact->getContactPhone() : '(+000) 00 00 00 00' ?>
+                                        </a>
+                                    <?php } ?>
+                                <?php } ?>
                             </div>
                             <div class="contact-email-text els-text els-text-lg">
                                 <a

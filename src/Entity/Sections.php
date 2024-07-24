@@ -14,7 +14,7 @@ class Sections extends BaseEntity
     private ?array $buttonData = ['url' => null, 'text'=> null];
 
     /**
-     * @return string|null
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -22,7 +22,7 @@ class Sections extends BaseEntity
     }
 
     /**
-     * @param string|null $id
+     * @param int|null $id
      * @return Sections
      */
     public function setId(?int $id): Sections

@@ -13,7 +13,7 @@ class CardsContents extends BaseEntity
     private ?string $cardTitle = null;
     private ?string $cardText = null;
 
-    private array $cardImg = ['imgSource' => null, 'imgAltText' => null, 'imgAsLink' => null];
+    private array $cardImg = ['img_source' => null, 'img_alt_text' => null, 'img_as_link' => null];
 
     private array $cardButtonData = ['url' => null, 'text'=> null];
 
@@ -54,9 +54,9 @@ class CardsContents extends BaseEntity
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getCardImg(): ?string
+    public function getCardImg(): ?array
     {
         return $this->cardImg;
     }

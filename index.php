@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once 'vendor/autoload.php';
 use Els\Factory\PDOFactory;
+use Els\Manager\ContactApiManager\ContactApiManager;
 use Els\Manager\MembersManager\MembersManagerPdo;
 use Els\Manager\ProjectsManager\ProjectsManagerPdo;
 use Els\Controllers\projectsControllers\createProject;
@@ -24,6 +25,12 @@ $sections = [
 $cardsContents = [
     "intro" => [], "project" => [], "members" => [], "mission" => [], "contact" => []
 ];
+
+$contacts = [
+    "home" => []
+];
+
+$errors = [];
 
 $lang = "fr";
 
@@ -54,7 +61,20 @@ try {
 
     foreach ($cardsContents as $key => $value) {
         $temp = new CardsContentsApiManager($apiUrl . "/api/components/cards/". $key . "/1/" . $lang);
-        $cardsContents[$key] = $temp->getSectionsFromUrl();
+        if(!array_key_exists('error', $temp->getSectionsFromUrl())) {
+            $cardsContents[$key] = $temp->getSectionsFromUrl();
+        } else {
+            $errors[] = $temp->getSectionsFromUrl()['error'];
+        }
+    }
+
+    foreach ($contacts as $key => $value) {
+        $temp = new ContactApiManager($apiUrl . "/api/components/contact/". $key . "/1/" . $lang);
+        if(!array_key_exists('error', $temp->getSectionsFromUrl())) {
+            $contacts[$key] = $temp->getSectionsFromUrl();
+        } else {
+            $errors[] = $temp->getSectionsFromUrl()['error'];
+        }
     }
 
 } catch (PDOException $e) {
@@ -62,6 +82,8 @@ try {
     $members = [];
     $projects = [];
     $sectionsTexts = [];
+} catch (\GuzzleHttp\Exception\GuzzleException $e) {
+    $errors[] = $e->getMessage();
 }
 
 $mainController = new createPage();
@@ -101,6 +123,8 @@ try {
                     'members' => $members,
                     'sections' => $sections,
                     'cardsContents' => $cardsContents,
+                    'contacts' => $contacts,
+                    'errors' => $errors
                 ]
             ];
 

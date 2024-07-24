@@ -1,24 +1,24 @@
 <?php
-namespace Els\Manager\CardsContentsManager;
+namespace Els\Manager\ContactApiManager;
 
-use Els\Entity\CardsContents;
 use GuzzleHttp\Client;
+use Els\Entity\ContactInfos;
 use Els\Manager\ApiBaseManager;
 use Els\Traits\Hydrator;
+use GuzzleHttp\Exception\GuzzleException;
 
-class CardsContentsApiManager extends ApiBaseManager
+class ContactApiManager extends ApiBaseManager
 {
     use Hydrator;
 
     /**
-     * @param string $url
-     * @param string $method
      * @return array|null
+     * @throws GuzzleException
      */
     public function getSectionsFromUrl(): ?array
     {
         $client = new Client([]);
-        $sectionsCardsText = [];
+        $sectionsText = [];
         if($this->url && $this->method) {
             $response = $client->request($this->method, $this->url);
             $request = json_decode($response->getBody()->getContents(), true);
@@ -31,13 +31,15 @@ class CardsContentsApiManager extends ApiBaseManager
                 }
 
                 foreach ($datas as $data) {
-                    $sectionsCardsText[] = new CardsContents($data);
+                    $sectionsText[] = new ContactInfos($data);
                 }
             }
 
-            return $sectionsCardsText;
+            return $sectionsText;
         } else {
-            return $sectionsCardsText;
+            return $sectionsText;
         }
+
     }
+
 }
