@@ -15,10 +15,17 @@ use Els\Controllers\viewControllers\createPage;
 use Els\Manager\MembersManager\MembersApiManager;
 use Els\Manager\ProjectsManager\ProjectsApiManager;
 use Els\Manager\SectionsManager\SectionsApiManager;
+use Els\Manager\CardsContentsManager\CardsContentsApiManager;
 
 $sections = [
-    "project" => [], "members" => []
+   "intro" => [], "project" => [], "members" => [], "mission" => [], "contact" => []
 ];
+
+$cardsContents = [
+    "intro" => [], "project" => [], "members" => [], "mission" => [], "contact" => []
+];
+
+$lang = "fr";
 
 try {
     $pdoConn = new PDOFactory(
@@ -32,16 +39,26 @@ try {
 //    $showMembers = new MembersManagerPdo($pdoConn);
 //    $members = $showMembers->getMembers();
 
-    $showMembers = new MembersApiManager("https://nextjs-with-supabase-ebon-six.vercel.app/api/members");
+    $apiUrl = getenv('API_COOKING_URL');
+    $showMembers = new MembersApiManager($apiUrl . "/api/members");
     $members = $showMembers->getMembersFromUrl();
 
     // https://jsonplaceholder.typicode.com/todos
-    $showProjects = new ProjectsApiManager("https://nextjs-with-supabase-ebon-six.vercel.app/api/projects");
+    $showProjects = new ProjectsApiManager($apiUrl . "/api/projects");
     $projects = $showProjects->getProjectsFromUrl();
 
     foreach ($sections as $key => $value) {
-        $temp = new SectionsApiManager("https://nextjs-with-supabase-ebon-six.vercel.app/api/sections/". $key);
+        $temp = new SectionsApiManager($apiUrl . "/api/sections/". $key);
         $sections[$key] = $temp->getSectionsFromUrl();
+    }
+
+    foreach ($cardsContents as $key => $value) {
+        $temp = new CardsContentsApiManager($apiUrl . "/api/components/cards/". $key . "/1/" . $lang);
+        var_dump($temp->getSectionsFromUrl());
+        if($temp) {
+            $cardsContents[$key] = $temp->getSectionsFromUrl();
+        }
+
     }
 
 } catch (PDOException $e) {
@@ -49,11 +66,7 @@ try {
     $members = [];
     $projects = [];
     $sectionsTexts = [];
-
 }
-
-
-
 
 $mainController = new createPage();
 $createProject = new createProject();
@@ -90,8 +103,8 @@ try {
                     'jsonProjects' => $jsonProjects,
                     'projects' => $projects,
                     'members' => $members,
-                    'sectionsProject' => $sections['project'],
-                    'sectionsMembers' => $sections['members']
+                    'sections' => $sections,
+                    'cardsContents' => $cardsContents,
                 ]
             ];
 

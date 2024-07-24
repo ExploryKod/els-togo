@@ -7,8 +7,10 @@ use Els\Entity\Projects;
 
 $members = $data['members'] ?? "";
 $projects = $data['projects'] ?? "";
-
-
+$sections = $data['sections'] ?? "";
+$cards = $cardsContents['mission'] ?? "";
+var_dump($cards);
+die();
 $jsonMembers = [
     [
         'nom' => 'Kpeglo Bessou',
@@ -65,16 +67,23 @@ $partners = [
 
 ?>
 
-<main id="homepage" class="<?php echo $page_css_id ?>">
+<main id="homepage" class="<?php echo $page_css_id ?? "" ?>">
 
     <section id="hero" class="image-text">
         <div class="container">
             <div class="row mainRow">
                 <div class="col-12 col-lg-6 image-text__textWrapper">
-                    <div class="pre-title">Association ELS - Togo</div>
-                    <div class="title">Nous aidons à développer l'éducation, les loisirs et la santé.</div>
-                    <p class="els-text-lg">Nous pensons que chacun a le droit d'être éduqué, soigné et protégé. Nous apportons notre pierre pour que chacun puisse vivre dans un environnement sain.</p>
-                    <a href="#contact" class="button">Je veux m'engager</a>
+                    <?php if(array_key_exists('intro', $sections)) { ?>
+                        <?php foreach($sections['intro'] as $sectionText) { ?>
+                        <div class="pre-title"><?= !empty($sectionText->getSectionPretitle()) ? $sectionText->getSectionPretitle() : "Association ELS - Togo" ?></div>
+                        <div class="title"><?= !empty($sectionText->getSectionTitle()) ? $sectionText->getSectionTitle() : "Nous aidons à développer l'éducation, les loisirs et la santé." ?></div>
+                        <p class="els-text-lg">
+                            <?= !empty($sectionText->getSectionText()) ? $sectionText->getSectionText() : "Nous pensons que chacun a le droit d'être éduqué,
+                            soigné et protégé. Nous apportons notre pierre pour que chacun puisse vivre dans un environnement sain." ?></p>
+                            <a href="<?= $sectionText->getButtonData()['url'] ? $sectionText->getButtonData()['text'] : "#contact" ?>" class="button">
+                                <?= $sectionText->getButtonData()['text'] ? $sectionText->getButtonData()['text'] : "Je veux m'engager"?></a>
+                        <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="col-12 col-lg-6 ps-lg-5 image-text__imageWrapper">
                     <img src="/assets/img/livre-ecole.jpg" alt="école" />
@@ -88,10 +97,16 @@ $partners = [
         <div class="projects-section-inner container">
             <div class="content">
                 <div class="image-text__textWrapper">
-                    <div class="pre-title">Nos projets</div>
-                    <div class="title">Découvrez nos projets.</div>
-                    <p>Nos projets incarnent la force et la diversité de nos convictions. Nous nous engageons avec les populations locales afin d'avancer ensemble.
-                        Nous mettons un point d'honneur à la coopération et l'autonomisation.</p>
+                    <?php if(array_key_exists('project', $sections)) { ?>
+
+                        <?php foreach($sections['project'] as $sectionText) { ?>
+
+                            <div class="pre-title"><?= !empty($sectionText->getSectionPretitle()) ? $sectionText->getSectionPretitle() : "Nos projets" ?></div>
+                            <div class="title"><?= !empty($sectionText->getSectionTitle()) ? $sectionText->getSectionTitle() : "Découvrez nos projets." ?></div>
+                            <p><?= !empty($sectionText->getSectionText()) ? $sectionText->getSectionText() : "Nos projets incarnent la force et la diversité de nos convictions. Nous nous engageons avec les populations locales afin d'avancer ensemble.
+                                Nous mettons un point d'honneur à la coopération et l'autonomisation." ?></p>
+                        <?php } ?>
+                    <?php } ?>
                 </div>
             </div>
             <div class="swiper-container els-swiper-projects <?php echo count($projects) < 3 ? "minimal-view" : "" ?>">
@@ -145,12 +160,22 @@ $partners = [
     <section id="mission" class="mission-section">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center">
-                    <h2 class="pre-title pre-title--light pre-title--centered">Notre Mission & nos valeurs</h2>
-                    <p class="my-5 els-text-lg els-text--light els-text--centered">Nous contribuons à l'amélioration du cadre de vie des personnes. <br/> Pour ce faire nous promouvons une éducation de qualité et inclusive.</p>
-                </div>
+                <?php if(array_key_exists('mission', $sections)) { ?>
+
+                    <?php foreach($sections['mission'] as $sectionText) { ?>
+                    <div class="col-md-12 text-center">
+                        <h2 class="pre-title pre-title--light pre-title--centered"><?= !empty($sectionText->getSectionPretitle()) ? $sectionText->getSectionPretitle() : "Notre Mission & nos valeurs" ?></h2>
+                        <p class="my-5 els-text-lg els-text--light els-text--centered">
+                            <?= $sectionText->getSectionText() ? $sectionText->getSectionText() : "" ?>
+                        </p>
+                    </div>
+                    <?php } ?>
+                <?php } ?>
             </div>
             <div class="row value-cards">
+                <?php if(array_key_exists('mission', $cards)) { ?>
+
+                <?php foreach($cards['mission'] as $card) { ?>
                 <!-- Carte 1 -->
                 <div class="col-lg-4">
                     <div class="card">
@@ -158,47 +183,62 @@ $partners = [
                             <img src="/assets/img/icons/5236.jpg" alt="personnes tenant des feuilles" />
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Dignité</h5>
-                            <p class="card-text">Nous respectons chaque personne et groupe que nous aidons. Nous préférons ainsi accompagner plutôt qu'assister au nom de la dignité.</p>
+                            <h5 class="card-title"><?php $card->getCardTitle() ?></h5>
+                            <p class="card-text"><?php $card->getCardText() ?></p>
                         </div>
                     </div>
                 </div>
-                <!-- Carte 2 -->
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Amour</h5>
-                            <p class="card-text">Nos engagements se font grâce à la formidable force que nous donne l'amour.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Carte 3 -->
-                <div class="col-lg-4">
-                    <div class="mb-5 card">
-                        <div class="card-image">
-                            <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Franchise</h5>
-                            <p class="card-text">Nous valorisons l'authenticité et l'intégrité. Nous mettons un point d'honneur à être transparent avec nos bénévoles, nos donateurs et nos parties prenantes.</p>
+                <?php } ?>
+                <?php } else { ?>
+                    <!-- Carte 1 -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="/assets/img/icons/5236.jpg" alt="personnes tenant des feuilles" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Dignité</h5>
+                                <p class="card-text">Nous respectons chaque personne et groupe que nous aidons. Nous préférons ainsi accompagner plutôt qu'assister au nom de la dignité.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Carte 4 -->
-                <div class="col-lg-4">
-                    <div class="mb-5 card">
-                        <div class="card-image">
-                            <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Partage</h5>
-                            <p class="card-text">Chaque mission est l'occasion de partager des choses ou des mots avec autrui peu importe d'où il vient. Ce partage s'incarne dans l'échange, la rencontre, le don.</p>
+                    <!-- Carte 2 -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Amour</h5>
+                                <p class="card-text">Nos engagements se font grâce à la formidable force que nous donne l'amour.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <!-- Carte 3 -->
+                    <div class="col-lg-4">
+                        <div class="mb-5 card">
+                            <div class="card-image">
+                                <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Franchise</h5>
+                                <p class="card-text">Nous valorisons l'authenticité et l'intégrité. Nous mettons un point d'honneur à être transparent avec nos bénévoles, nos donateurs et nos parties prenantes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Carte 4 -->
+                    <div class="col-lg-4">
+                        <div class="mb-5 card">
+                            <div class="card-image">
+                                <img src="/assets/img/icons/5236.jpg" alt="mains assemblant un puzzle" />
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Partage</h5>
+                                <p class="card-text">Chaque mission est l'occasion de partager des choses ou des mots avec autrui peu importe d'où il vient. Ce partage s'incarne dans l'échange, la rencontre, le don.</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
     </section>
 
@@ -207,9 +247,19 @@ $partners = [
         <div class="container">
             <div class="row mainRow">
                 <div class="col-12 text-cards-horizon__textWrapper">
-                    <div class="pre-title pre-title--centered">Notre équipe</div>
-                    <div class="title title--centered">Une équipe engagée pour rendre le monde meilleur</div>
-                    <p class="els-text-lg els-text-centered">Depuis 2010, nous nous sommes engagées ensemble et avons bâti pierre par pierre cette association. Découvrez le parcours des membres fondateurs.</p>
+                    <?php if(array_key_exists('members', $sections)) { ?>
+
+                        <?php foreach($sections['members'] as $sectionText) { ?>
+                        <div class="pre-title pre-title--centered"><?= $sectionText->getSectionPretitle() ? $sectionText->getSectionPretitle() : "Notre équipe" ?></div>
+                        <div class="title title--centered"><?= $sectionText->getSectionTitle() ? $sectionText->getSectionTitle() : "Une équipe engagée pour rendre le monde meilleur" ?></div>
+                        <p class="els-text-lg els-text--centered">
+                            <?= $sectionText->getSectionText() ? $sectionText->getSectionText() :
+                                "Depuis 2010, nous nous sommes engagées ensemble et avons bâti pierre par pierre cette association.
+                                Découvrez le parcours des membres fondateurs."
+                            ?>
+                        </p>
+                        <?php } ?>
+                    <?php } ?>
                 </div>
                 <div class="col-12 text-cards-horizon__cardsWrapper">
                     <?php foreach($members as $member) { ?>

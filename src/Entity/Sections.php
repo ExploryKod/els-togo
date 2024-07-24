@@ -11,6 +11,8 @@ class Sections extends BaseEntity
     private ?string $sectionTitle = null;
     private ?string $sectionText = null;
 
+    private ?array $buttonData = ['url' => null, 'text'=> null];
+
     /**
      * @return string|null
      */
@@ -131,9 +133,27 @@ class Sections extends BaseEntity
      * @param string|null $sectionText
      * @return Sections
      */
-    public function setSectionText(?string $sectionText): Sections
+    public function setSectionText(string | array | null $sectionText): Sections
     {
-        $this->sectionText = $sectionText;
+        $this->sectionText = $this->createParagraphs($sectionText);
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getButtonData(): array
+    {
+        return $this->buttonData;
+    }
+
+    /**
+     * @param string|null $sectionText
+     * @return Sections
+     */
+    public function setButtonData(array $buttonData): Sections
+    {
+        $this->buttonData = $buttonData;
         return $this;
     }
 }

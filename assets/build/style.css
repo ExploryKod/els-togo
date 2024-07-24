@@ -6801,6 +6801,9 @@ a:hover, a:active, a:focus {
 .title--secondary {
   color: #0036a3;
 }
+.title--centered {
+  text-align: center;
+}
 
 p {
   color: #262c28;
