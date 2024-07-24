@@ -8,9 +8,10 @@ use Els\Entity\Projects;
 $members = $data['members'] ?? "";
 $projects = $data['projects'] ?? "";
 $sections = $data['sections'] ?? "";
-$cards = $cardsContents['mission'] ?? "";
-var_dump($cards);
-die();
+$cards = $data['cardsContents'];
+echo "<pre>";
+var_dump($cards['mission']);
+echo "</pre>";
 $jsonMembers = [
     [
         'nom' => 'Kpeglo Bessou',

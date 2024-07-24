@@ -23,7 +23,10 @@ class CardsContentsApiManager extends ApiBaseManager
             $response = $client->request($this->method, $this->url);
             $request = json_decode($response->getBody()->getContents(), true);
             $datas = $request;
-            $sectionsCardsText[] = new CardsContents($datas);
+            var_dump($data);
+            foreach ($datas as $data) {
+                $sectionsCardsText[] = new CardsContents($data);
+            }
 
             return $sectionsCardsText;
         } else {

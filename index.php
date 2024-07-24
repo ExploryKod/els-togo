@@ -54,11 +54,7 @@ try {
 
     foreach ($cardsContents as $key => $value) {
         $temp = new CardsContentsApiManager($apiUrl . "/api/components/cards/". $key . "/1/" . $lang);
-        var_dump($temp->getSectionsFromUrl());
-        if($temp) {
-            $cardsContents[$key] = $temp->getSectionsFromUrl();
-        }
-
+        $cardsContents[$key] = $temp->getSectionsFromUrl();
     }
 
 } catch (PDOException $e) {
